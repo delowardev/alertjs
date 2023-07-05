@@ -1,6 +1,7 @@
 import { render, type ContainerNode } from "preact";
 import "./styles/main.scss";
-import {createAlertElement} from "./utils.ts";
+import { createAlertElement } from "./utils.ts";
+
 
 class Alert {
   
@@ -26,7 +27,7 @@ class Alert {
     containerRoot?.appendChild( container )
     this.container = container;
   }
-
+  
   show = ( title: string, content: string ) => {
     this.title = title;
     this.content = content;
@@ -34,19 +35,17 @@ class Alert {
   }
   
   remove = ( uid: string ) => {
-    const alert = this.instances[uid];
-    if( alert ) {
-      alert.remove()
-    }
+    this.instances[uid]?.remove();
   }
   
-  
   getMarkup = ( uid: string = '' ) => {
+    const remove = this.remove.bind( this, uid );
+    
     return (
         <div class="alert-js__container">
           <h2>{ this.title }</h2>
           <p>{ this.content  }</p>
-          <button onClick={ this.remove.bind( this, uid ) } >Remove</button>
+          <button onClick={ remove } >Remove</button>
         </div>
     )
   }
