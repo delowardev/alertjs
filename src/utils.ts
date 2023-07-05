@@ -1,10 +1,16 @@
-function createAlertElement( type = 'div', className?: string, id?: string ) {
+
+interface ElementProps {
+  id?: string;
+  className?: string;
+  innerHTML?: string;
+}
+
+type Props = string | ElementProps;
+
+function createAlertElement( type = 'div', props: Props = {} ) {
   return Object.assign(
       document.createElement( type ),
-      {
-        id,
-        className
-      }
+      { ...( typeof props === 'string' ? { innerHTML: props } : props ) }
   )
 }
 

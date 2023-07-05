@@ -1,6 +1,8 @@
-import { render, type ContainerNode } from "preact";
 import "./styles/main.scss";
 import { createAlertElement } from "./utils.ts";
+
+
+type ContainerNode = HTMLElement | Document;
 
 
 class Alert {
@@ -23,7 +25,7 @@ class Alert {
   prepareContainer() {
     const isContainer = this.customContainer && ( this.customContainer instanceof Element || this.customContainer instanceof Document )
     let containerRoot = isContainer ? this.customContainer: document.body;
-    const container = createAlertElement('div', 'alert-js');
+    const container = createAlertElement('div', { className: 'alert-js' });
     containerRoot?.appendChild( container )
     this.container = container;
   }
@@ -38,25 +40,33 @@ class Alert {
     this.instances[uid]?.remove();
   }
   
-  getMarkup = ( uid: string = '' ) => {
+  markup = ( uid: string = '' ) => {
     const remove = this.remove.bind( this, uid );
     
-    return (
-        <div class="alert-js__container">
-          <h2>{ this.title }</h2>
-          <p>{ this.content  }</p>
-          <button onClick={ remove } >Remove</button>
-        </div>
-    )
+    // content
+    const title = createAlertElement("h2", this.title )
+    const content = createAlertElement("p", this.content )
+    const button = createAlertElement("button", "Remove");
+    const container = createAlertElement("div", { className: "alert-js__container" });
+    
+    // attach events
+    button.addEventListener("click", remove )
+    
+    // appends
+    container.appendChild( title );
+    container.appendChild( content );
+    container.appendChild( button );
+    container.appendChild( button );
+    
+    return container
   }
   
   render = () => {
     const uid = `alert-${Date.now()}`;
-    const Popup = this.getMarkup( uid )
-    const alert = createAlertElement('div', 'alert-js__alert', uid);
+    const alert = createAlertElement('div', { className: 'alert-js__alert', id: uid });
     this.container?.appendChild( alert );
     this.instances[uid] = alert;
-    render( Popup, alert as ContainerNode );
+    alert.appendChild(this.markup( uid ))
   }
   
   
