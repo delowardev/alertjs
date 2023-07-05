@@ -1,0 +1,22 @@
+.alert-js {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	pointer-events: none;
+	z-index: 9999999;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+ 	&__alert {
+ 		pointer-events: all;
+ 		position: absolute;
+ 		width: 400px;
+ 		height: auto;
+ 		background: white;
+		color: #222222;
+		padding: 30px;
+ 	}
+}
