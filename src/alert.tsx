@@ -82,7 +82,17 @@ class Alert {
    * @param uid {string}
    */
   remove = ( uid: string ) => {
-    this.instances[uid]?.remove();
+    const alert = this.instances[uid];
+    
+    if ( alert ) {
+      
+      alert.classList.add('ajs__will-remove');
+      
+      setTimeout( () => {
+        this.instances[uid]?.remove();
+        delete this.instances[uid];
+      }, 200)
+    }
   }
   
   

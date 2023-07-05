@@ -14,7 +14,6 @@
 	align-items: center;
 	justify-content: center;
 	
-	
 	&__list {
 		max-height: 100%;
 		overflow: auto;
@@ -26,6 +25,14 @@
 		width: 100%;
 		display: block;
 		z-index: 1;
+		
+		&.ajs__will-remove .alert-js__container {
+			animation: ajs__zoom_out 200ms cubic-bezier(.455,.03,.515,.955) both 1;
+		}
+		
+		&.ajs__will-remove .alert-js__overlay {
+			animation: ajs__fade_out 200ms cubic-bezier(.455,.03,.515,.955) both 1;
+		}
  	}
 	
 	&__overlay {
@@ -37,6 +44,7 @@
 		background: rgba(0, 0, 0, 0.5);
 		top: 0;
 		left: 0;
+		animation: ajs__fade_in 200ms cubic-bezier(.455,.03,.515,.955) both 1;
 	}
 	
  	&__container {
@@ -49,6 +57,7 @@
 		text-align: center;
 		margin: 0 auto;
 		border-radius: 10px;
+		animation: ajs__zoom_in 200ms cubic-bezier(.455,.03,.515,.955) both 1;
  	}
 	
 	&__icon {
