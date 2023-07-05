@@ -29,9 +29,7 @@ const defaultProps: RenderProps = {
 }
 
 class Alert {
-
-  title = "";
-  content = "";
+  
   customContainer?: ContainerNode;
   container?: ContainerNode;
   instances: Record<string, HTMLElement> = {};
@@ -63,8 +61,12 @@ class Alert {
   show = ( props: RenderProps ) => {
     this.render( this.getProps( props ) );
   }
-
-
+  
+  
+  /**
+   * Validate & prepare props
+   * @param props
+   */
   getProps = ( props: RenderProps ): RenderProps => {
     const _props: RenderProps = {};
     for ( let prop in defaultProps ) {
@@ -82,8 +84,12 @@ class Alert {
   remove = ( uid: string ) => {
     this.instances[uid]?.remove();
   }
-
-
+  
+  
+  /**
+   * Prepare and return the markup.
+   * @param props
+   */
   markup = ( props: MarkupProps ) => {
 
     const { uid = '', title = '', content = '', type = 'success' } = props;
@@ -108,7 +114,11 @@ class Alert {
 
     return container
   }
-
+  
+  /**
+   * Render alert element.
+   * @param props
+   */
   render = ( props: RenderProps ) => {
     const uid = `alert-${Date.now()}`;
     const alert = createAlertElement('div', { className: 'alert-js__alert', id: uid });
