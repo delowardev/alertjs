@@ -1,0 +1,14 @@
+.ajs__i {
+	&-check {
+		&-1 {
+			stroke-dashoffset: 0;
+			animation: ajs__i-check 1.4s cubic-bezier(.99,-.1,.01,1.02);
+		}
+	}
+	
+	&-exclamatory {
+		&-1 {
+			animation: ajs__i-exclamatory .8s cubic-bezier(.455,.03,.515,.955) both 1;
+		}
+	}
+}

@@ -1,3 +1,6 @@
+@import "animations";
+@import "icons";
+
 .alert-js {
 	position: fixed;
 	top: 0;
@@ -7,16 +10,55 @@
 	pointer-events: none;
 	z-index: 9999999;
 	display: flex;
+	flex-wrap: wrap;
 	align-items: center;
 	justify-content: center;
+	
+	
+	&__list {
+		max-height: 100%;
+		overflow: auto;
+		padding: 5% 0;
+		box-sizing: border-box;
+	}
 
  	&__alert {
- 		pointer-events: all;
- 		position: absolute;
- 		width: 400px;
- 		height: auto;
- 		background: white;
+		width: 100%;
+		display: block;
+		z-index: 1;
+ 	}
+	
+	&__overlay {
+		pointer-events: all;
+		position: fixed;
+		height: 100%;
+		width: 100%;
+		z-index: -1;
+		background: rgba(0, 0, 0, 0.5);
+		top: 0;
+		left: 0;
+	}
+	
+ 	&__container {
+		pointer-events: all;
+		width: 400px;
+		height: auto;
+		background: white;
 		color: #222222;
 		padding: 30px;
+		text-align: center;
+		margin: 0 auto;
+		border-radius: 10px;
  	}
+	
+	&__icon {
+		width: 120px;
+		height: 120px;
+		margin: 0 auto;
+		
+		svg {
+			width: 100%;
+			height: 100%;
+		}
+	}
 }
