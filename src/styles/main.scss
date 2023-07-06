@@ -27,11 +27,11 @@
 		z-index: 1;
 		
 		&.ajs__will-remove .alert-js__container {
-			animation: ajs__zoom_out 200ms cubic-bezier(.455,.03,.515,.955) both 1;
+			animation: ajs__zoom_out 150ms cubic-bezier(.455,.03,.515,.955) both 1;
 		}
 		
 		&.ajs__will-remove .alert-js__overlay {
-			animation: ajs__fade_out 200ms cubic-bezier(.455,.03,.515,.955) both 1;
+			animation: ajs__fade_out 150ms cubic-bezier(.455,.03,.515,.955) both 1;
 		}
  	}
 	

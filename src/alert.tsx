@@ -9,6 +9,9 @@ interface RenderProps {
   title?: string;
   content?: string;
   type?: AlertType | string;
+  placement?:
+      'top' |
+      'center'
 }
 
 interface MarkupProps extends RenderProps{
@@ -32,14 +35,14 @@ class Alert {
   
   customContainer?: ContainerNode;
   container?: ContainerNode;
-  instances: Record<string, HTMLElement> = {};
-
-
+  instance?: HTMLElement | undefined;
+  
+  
   constructor( customContainer?: ContainerNode ) {
     this.customContainer = customContainer;
     this.prepareContainer();
   }
-
+  
   /**
    * Ensure element container/root element.
    */
@@ -52,13 +55,14 @@ class Alert {
     containerRoot?.appendChild( container )
     this.container = containerList;
   }
-
+  
   /**
    * Display alert.
    *
    * @param props
    */
-  show = ( props: RenderProps ) => {
+  open = ( props: RenderProps ) => {
+    this.close( true );
     this.render( this.getProps( props ) );
   }
   
@@ -75,23 +79,19 @@ class Alert {
     }
     return _props;
   }
-
+  
   /**
    * Remove alert from DOM
-   *2
-   * @param uid {string}
    */
-  remove = ( uid: string ) => {
-    const alert = this.instances[uid];
-    
+  close = ( instant = false ) => {
+    const alert = this.instance;
     if ( alert ) {
-      
-      alert.classList.add('ajs__will-remove');
-      
-      setTimeout( () => {
-        this.instances[uid]?.remove();
-        delete this.instances[uid];
-      }, 200)
+      if ( instant ) {
+        alert.remove();
+      } else {
+        alert.classList.add('ajs__will-remove');
+        setTimeout( alert.remove, 200)
+      }
     }
   }
   
@@ -101,27 +101,27 @@ class Alert {
    * @param props
    */
   markup = ( props: MarkupProps ) => {
-
-    const { uid = '', title = '', content = '', type = 'success' } = props;
+    
+    const {  title = '', content = '', type = 'success' } = props;
     const _self = this;
-
+    
     const localType = type as AlertType;
-
+    
     const nodes: Array<NodeProps> = [
       { type: "div", content: icons[localType], className: 'alert-js__icon' },
       { type: "h2", content: title },
       { type: "p", content: content },
-      { type: "button", content: "Remove", click: _self.remove.bind( this, uid ) }
+      { type: "button", content: "Remove", click: _self.close }
     ];
-
+    
     const container = createAlertElement("div", { className: "alert-js__container" });
-
+    
     nodes.forEach( ({ type, content, click, className = '' }: NodeProps ) => {
       const element = createAlertElement( type, { className, innerHTML: content } )
       if( click ) element.addEventListener( "click", click )
       container.appendChild( element )
     } )
-
+    
     return container
   }
   
@@ -133,14 +133,16 @@ class Alert {
     const uid = `alert-${Date.now()}`;
     const alert = createAlertElement('div', { className: 'alert-js__alert', id: uid });
     const overlay = createAlertElement('span', { className: 'alert-js__overlay'});
-    overlay.addEventListener("click", this.remove.bind( this, uid ));
+    
+    overlay.addEventListener("click", () => this.close() );
     alert.appendChild( overlay );
-    this.container?.appendChild( alert );
-    this.instances[uid] = alert;
     alert.appendChild(this.markup( { uid, ...props } ))
+    
+    this.container?.appendChild( alert );
+    this.instance = alert;
   }
-
-
+  
+  
 }
 
 export default Alert;

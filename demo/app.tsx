@@ -1,12 +1,30 @@
 import './app.css'
 import { Alert } from "../src";
 const alert = new Alert();
+const alert2 = new Alert();
+
+const _event = {
+  'onCancel': null,
+  'onConfirm': null,
+  'onBeforeClose': null,
+  'onClose': null,
+}
+
+const confirm = {
+  text: '',
+  on: '',
+}
+
+const cancel = {
+  text: '',
+  on: '',
+}
 
 export function App() {
   
   function onAlert() {
     
-    alert.show( {
+    alert.open( {
       type: "exclamatory",
       title: "Hello world",
       content: "This is our content"
@@ -14,11 +32,12 @@ export function App() {
   }
   
   function onSuccess() {
-    alert.show( {
+    alert.open( {
       type: "success",
       title: "Hello Success",
       content: "This is our success content"
     } );
+    
   }
 
   return (
