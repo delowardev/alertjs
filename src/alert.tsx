@@ -1,28 +1,10 @@
 import "./styles/main.scss";
-import { createAlertElement } from "./utils.ts";
+import { getAlertMarkup, getContainerNodes } from "./utils";
 import icons from "./icons.ts";
-import { AlertType } from "./types.ts";
+import { ContainerNode, RenderProps } from "./types.ts";
 
-type ContainerNode = HTMLElement | Document;
-
-interface RenderProps {
-  title?: string;
-  content?: string;
-  type?: AlertType | string;
-  placement?:
-      'top' |
-      'center'
-}
-
-interface MarkupProps extends RenderProps{
-  uid?: string;
-}
-
-interface NodeProps {
-  type: 'h1' | 'h2' | 'p' | 'button' | 'div';
-  content?: string;
-  className?: string;
-  click?(): any;
+function noop(): any {
+  return {}
 }
 
 const defaultProps: RenderProps = {
@@ -35,25 +17,18 @@ class Alert {
   
   customContainer?: ContainerNode;
   container?: ContainerNode;
-  instance?: HTMLElement | undefined;
+  parent?: ContainerNode;
+  instance?: Element | undefined;
   
   
   constructor( customContainer?: ContainerNode ) {
+    
+    if ( ! window ) {
+      console.warn( 'AlertJS: window is not defined!' )
+      return;
+    }
+    
     this.customContainer = customContainer;
-    this.prepareContainer();
-  }
-  
-  /**
-   * Ensure element container/root element.
-   */
-  prepareContainer() {
-    const isContainer = this.customContainer && ( this.customContainer instanceof Element || this.customContainer instanceof Document )
-    let containerRoot = isContainer ? this.customContainer: document.body;
-    const container = createAlertElement('div', { className: 'alert-js' });
-    const containerList = createAlertElement('div', { className: 'alert-js__list' });
-    container.appendChild( containerList )
-    containerRoot?.appendChild( container )
-    this.container = containerList;
   }
   
   /**
@@ -63,6 +38,7 @@ class Alert {
    */
   open = ( props: RenderProps ) => {
     this.close( true );
+    Object.assign(this, getContainerNodes( this.customContainer ));
     this.render( this.getProps( props ) );
   }
   
@@ -75,9 +51,18 @@ class Alert {
     const _props: RenderProps = {};
     for ( let prop in defaultProps ) {
       const _prop = prop as keyof RenderProps;
+      // @ts-ignore
       _props[ _prop ] = typeof props[_prop] !== 'undefined' ? props[_prop] : defaultProps[_prop];
     }
     return _props;
+  }
+  
+  remove = () => {
+    this.instance?.remove();
+    this.parent?.remove();
+    this.instance = undefined;
+    this.parent = undefined;
+    this.container = undefined;
   }
   
   /**
@@ -87,42 +72,26 @@ class Alert {
     const alert = this.instance;
     if ( alert ) {
       if ( instant ) {
-        alert.remove();
+        this.remove();
       } else {
         alert.classList.add('ajs__will-remove');
-        setTimeout( alert.remove, 200)
+        setTimeout( this.remove, 200)
       }
     }
   }
   
-  
-  /**
-   * Prepare and return the markup.
-   * @param props
-   */
-  markup = ( props: MarkupProps ) => {
+  withHydration = ( markup: Element ) => {
+    const listener = ( selector: string, event: string, callback = noop ) => {
+      markup.querySelector( selector )?.addEventListener( event, function () {
+        callback()
+      })
+    }
     
-    const {  title = '', content = '', type = 'success' } = props;
-    const _self = this;
+    // onConfirm
+    listener('button.alert__js-confirm', 'click', this.close)
+    listener('button.alert__js-cancel', 'click', this.close )
     
-    const localType = type as AlertType;
-    
-    const nodes: Array<NodeProps> = [
-      { type: "div", content: icons[localType], className: 'alert-js__icon' },
-      { type: "h2", content: title },
-      { type: "p", content: content },
-      { type: "button", content: "Remove", click: _self.close }
-    ];
-    
-    const container = createAlertElement("div", { className: "alert-js__container" });
-    
-    nodes.forEach( ({ type, content, click, className = '' }: NodeProps ) => {
-      const element = createAlertElement( type, { className, innerHTML: content } )
-      if( click ) element.addEventListener( "click", click )
-      container.appendChild( element )
-    } )
-    
-    return container
+    return markup
   }
   
   /**
@@ -130,14 +99,18 @@ class Alert {
    * @param props
    */
   render = ( props: RenderProps ) => {
-    const uid = `alert-${Date.now()}`;
-    const alert = createAlertElement('div', { className: 'alert-js__alert', id: uid });
-    const overlay = createAlertElement('span', { className: 'alert-js__overlay'});
+    const {  title = '', content = '', type = 'success' } = props;
     
-    overlay.addEventListener("click", () => this.close() );
-    alert.appendChild( overlay );
-    alert.appendChild(this.markup( { uid, ...props } ))
+    const alertProps = {
+      title,
+      content,
+      icon: icons[type],
+      cancel: "Cancel",
+      confirm: "Confirm",
+      id: `alert-${Date.now()}`,
+    };
     
+    const alert = this.withHydration( getAlertMarkup( alertProps ) )
     this.container?.appendChild( alert );
     this.instance = alert;
   }
