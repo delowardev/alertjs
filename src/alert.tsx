@@ -1,17 +1,7 @@
 import "./styles/main.scss";
-import { getAlertMarkup, getContainerNodes } from "./utils";
+import { getAlertMarkup, getContainerNodes, noop, defaultOptions, validateUserProps } from "./utils";
 import icons from "./icons.ts";
-import { ContainerNode, RenderProps } from "./types.ts";
-
-function noop(): any {
-  return {}
-}
-
-const defaultProps: RenderProps = {
-  title: '',
-  content: '',
-  type: 'success',
-}
+import { ContainerNode, Options } from "./types.ts";
 
 class Alert {
   
@@ -19,9 +9,12 @@ class Alert {
   container?: ContainerNode;
   parent?: ContainerNode;
   instance?: Element | undefined;
+  defaultOptions: Options;
   
   
   constructor( customContainer?: ContainerNode ) {
+    this.defaultOptions = defaultOptions;
+    Object.freeze( this.defaultOptions );
     
     if ( ! window ) {
       console.warn( 'AlertJS: window is not defined!' )
@@ -36,25 +29,10 @@ class Alert {
    *
    * @param props
    */
-  open = ( props: RenderProps ) => {
+  open = ( props: Options ) => {
     this.close( true );
     Object.assign(this, getContainerNodes( this.customContainer ));
-    this.render( this.getProps( props ) );
-  }
-  
-  
-  /**
-   * Validate & prepare props
-   * @param props
-   */
-  getProps = ( props: RenderProps ): RenderProps => {
-    const _props: RenderProps = {};
-    for ( let prop in defaultProps ) {
-      const _prop = prop as keyof RenderProps;
-      // @ts-ignore
-      _props[ _prop ] = typeof props[_prop] !== 'undefined' ? props[_prop] : defaultProps[_prop];
-    }
-    return _props;
+    this.render( validateUserProps( props, this.defaultOptions ) );
   }
   
   remove = () => {
@@ -98,7 +76,7 @@ class Alert {
    * Render alert element.
    * @param props
    */
-  render = ( props: RenderProps ) => {
+  render = ( props: Options ) => {
     const {  title = '', content = '', type = 'success' } = props;
     
     const alertProps = {

@@ -10,17 +10,10 @@ export type AlertElementProps = string | ElementProps;
 
 export type ContainerNode = HTMLElement;
 
-export interface RenderProps {
-  title?: string;
-  content?: string;
+export interface Options extends Record<string, string | AlertType | undefined>{
+  title: string;
+  content: string;
   type?: AlertType;
-  placement?:
-      'top' |
-      'center'
-}
-
-export interface MarkupProps extends RenderProps{
-  uid?: string;
 }
 
 export interface HtmlMarkupStringProps {

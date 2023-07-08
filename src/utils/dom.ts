@@ -61,6 +61,5 @@ function getHtmlMarkupString( props : HtmlMarkupStringProps): string {
 function getAlertMarkup( props: HtmlMarkupStringProps ) {
   return createAlertElement('div', getHtmlMarkupString( props )).querySelector('.alert-js__alert') as Element;
 }
-function validateUserProps() {}
 
-export { getContainerNodes, createAlertElement, getAlertMarkup, validateUserProps, getHtmlMarkupString };
+export { getContainerNodes, createAlertElement, getAlertMarkup, getHtmlMarkupString };
