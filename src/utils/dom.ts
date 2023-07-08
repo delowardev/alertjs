@@ -49,8 +49,8 @@ function getHtmlMarkupString( props : HtmlMarkupStringProps): string {
         ${content ? `<p class="alert-js__content">${content}</p>` : ``}
         ${ (confirm || cancel ) ? `
           <div class="alert-js__footer">
-            ${ confirm ? `<button class="alert__js-confirm">${confirm}</button>` : ``}
-            ${ cancel ? `<button class="alert__js-cancel">${cancel}</button>` : `` }
+            ${ confirm ? `<button class="alert-js__confirm">${confirm}</button>` : ``}
+            ${ cancel ? `<button class="alert-js__cancel">${cancel}</button>` : `` }
           </div>
         ` : `` }
       </div>

@@ -1,22 +1,30 @@
-export type AlertType = 'success' | 'exclamatory' | 'danger' | 'warning' | 'info';
+type AlertType = 'success' | 'exclamatory' | 'danger' | 'warning' | 'info';
 
-export interface ElementProps {
+interface ElementProps {
   id?: string;
   className?: string;
   innerHTML?: string;
 }
 
-export type AlertElementProps = string | ElementProps;
+type AlertElementProps = string | ElementProps;
 
-export type ContainerNode = HTMLElement;
+type ContainerNode = HTMLElement;
 
-export interface Options extends Record<string, string | AlertType | undefined>{
+interface Options{
   title: string;
   content: string;
-  type?: AlertType;
+  type: AlertType;
+  confirm?: {
+    text?: string,
+    on?(): any;
+  },
+  cancel?: {
+    text?: string,
+    on?(): any;
+  }
 }
 
-export interface HtmlMarkupStringProps {
+interface HtmlMarkupStringProps {
   icon?: string;
   title?: string;
   content?: string;
@@ -24,3 +32,6 @@ export interface HtmlMarkupStringProps {
   cancel?: string;
   id?: string;
 }
+
+
+export type { AlertType, ElementProps, AlertElementProps, ContainerNode, Options, HtmlMarkupStringProps  }

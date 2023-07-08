@@ -1,39 +1,32 @@
 import './app.css'
-import { Alert } from "../src";
+// @ts-ignore
+import Alert from "../src/alert.tsx";
+const alert = new Alert();
 
-// const _event = {
-//   'onCancel': null,
-//   'onConfirm': null,
-//   'onBeforeClose': null,
-//   'onClose': null,
-// }
-//
-// const confirm = {
-//   text: '',
-//   on: '',
-// }
-//
-// const cancel = {
-//   text: '',
-//   on: '',
-// }
+
+const confirm = {
+  text: 'Confirm',
+  on: () => {},
+}
 
 export function App() {
   
   function onAlert() {
     
-    new Alert().open( {
+    alert.open( {
       type: "exclamatory",
       title: "Hello world",
-      content: "This is our content"
+      content: "This is our content",
+      confirm: {}
     } );
   }
   
   function onSuccess() {
-    new Alert().open( {
+    alert.open( {
       type: "success",
       title: "Hello Success",
-      content: "This is our success content"
+      content: "This is our success content",
+      confirm
     } );
     
   }
