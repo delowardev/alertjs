@@ -10,10 +10,13 @@ type AlertElementProps = string | ElementProps;
 
 type ContainerNode = HTMLElement;
 
+type Position = 'top' | 'top-start' | 'top-end' | 'center' | 'center-start' | 'center-end' | 'bottom' | 'bottom-start' | 'bottom-end';
+
 interface Options{
   title: string;
   content: string;
   type: AlertType;
+  position?: Position,
   confirm?: {
     text?: string,
     on?(): any;
@@ -24,14 +27,5 @@ interface Options{
   }
 }
 
-interface HtmlMarkupStringProps {
-  icon?: string;
-  title?: string;
-  content?: string;
-  confirm?: string;
-  cancel?: string;
-  id?: string;
-}
 
-
-export type { AlertType, ElementProps, AlertElementProps, ContainerNode, Options, HtmlMarkupStringProps  }
+export type { AlertType, ElementProps, AlertElementProps, ContainerNode, Options  }

@@ -1,7 +1,6 @@
 import "./styles/main.scss";
 import { getAlertMarkup, getContainerNodes, noop, defaultOptions, validateUserProps } from "./utils";
-import icons from "./icons.ts";
-import { ContainerNode, HtmlMarkupStringProps, Options } from "./types.ts";
+import { ContainerNode, Options } from "./types.ts";
 
 class Alert {
   
@@ -28,20 +27,8 @@ class Alert {
   /**
    * Prepare options for the alert markup.
    */
-  getOptions = (): HtmlMarkupStringProps => {
-    
-    const props = this.options as Options;
-    const options = validateUserProps( props, this.defaultOptions );
-    const { title, content, type, confirm, cancel } = options;
-    
-    return {
-      title,
-      content,
-      icon: icons[type],
-      cancel: confirm?.text,
-      confirm: cancel?.text,
-      id: `alert-${Date.now()}`,
-    };
+  getOptions = ( options: Options ): Options => {
+    return validateUserProps( options, this.defaultOptions );
   }
   
   /**
@@ -51,8 +38,8 @@ class Alert {
    */
   open = ( options: Options ) => {
     this.close( true );
-    Object.assign(this, getContainerNodes( this.customContainer ));
-    this.options = options;
+    this.options = this.getOptions( options ) ;
+    Object.assign(this, getContainerNodes( this.customContainer, this.options ));
     this.render();
   }
   
@@ -114,8 +101,7 @@ class Alert {
    * Render alert element.
    */
   render = () => {
-    const props = this.getOptions()
-    const alert = this.withHydration( getAlertMarkup( props ) )
+    const alert = this.withHydration( getAlertMarkup( this.options ) )
     this.container?.appendChild( alert );
     this.instance = alert;
   }

@@ -5,6 +5,7 @@ const options: Options = {
   title: '',
   content: '',
   type: 'success',
+  position: 'center',
   confirm: {
     text: 'Confirm',
     on: noop

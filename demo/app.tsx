@@ -17,6 +17,7 @@ export function App() {
       type: "exclamatory",
       title: "Hello world",
       content: "This is our content",
+      position: 'center-start',
       confirm: {}
     } );
   }

@@ -1,4 +1,5 @@
-import {AlertElementProps, ContainerNode, HtmlMarkupStringProps } from "../types.ts";
+import {AlertElementProps, ContainerNode, Options} from "../types.ts";
+import icons from "../icons.ts";
 
 function createAlertElement( type = 'div', props: AlertElementProps = {} ) {
   return Object.assign(
@@ -10,16 +11,18 @@ function createAlertElement( type = 'div', props: AlertElementProps = {} ) {
 /**
  *
  * @param customContainer
+ * @param options
  * @return HTMLElement
  *
  * <div class="alert-js">
  *    <div class="alert-js__list"></div> // containerList
  * </div>
  */
-function getContainerNodes( customContainer?: ContainerNode ): Record<string, HTMLElement> {
+function getContainerNodes( customContainer?: ContainerNode, options?: Options ): Record<string, HTMLElement> {
+  const position = `alert-js__position-${options?.position}`
   const isValidContainer = customContainer && customContainer instanceof Element;
   const containerRoot = isValidContainer ? customContainer: document.body;
-  const parent = createAlertElement('div', { className: 'alert-js' });
+  const parent = createAlertElement('div', { className: `alert-js ${position}` });
   const container = createAlertElement('div', { className: 'alert-js__list' });
   parent.appendChild( container );
   containerRoot.appendChild( parent );
@@ -29,28 +32,33 @@ function getContainerNodes( customContainer?: ContainerNode ): Record<string, HT
   };
 }
 
-function getHtmlMarkupString( props : HtmlMarkupStringProps): string {
+function getHtmlMarkupString( props : Options): string {
   
   const {
-    icon,
     title,
     content,
     confirm,
     cancel,
-    id
+    type,
+    // position
   } = props;
   
+  const icon = icons[type];
+  const _confirm = confirm?.text;
+  const _cancel = cancel?.text;
+  // const _position = `alert-js__${position}`;
+  
   return `
-    <div class="alert-js__alert" id="${id}">
+    <div class="alert-js__alert" id="alert-${Date.now()}">
       <span class="alert-js__overlay"></span>
       <div class="alert-js__container">
         ${icon ? `<div class="alert-js__icon">${icon}</div>` : ``}
         ${title ? `<h2 class="alert-js__title">${title}</h2>` : `` }
         ${content ? `<p class="alert-js__content">${content}</p>` : ``}
-        ${ (confirm || cancel ) ? `
+        ${ (_confirm || _cancel ) ? `
           <div class="alert-js__footer">
-            ${ confirm ? `<button class="alert-js__confirm">${confirm}</button>` : ``}
-            ${ cancel ? `<button class="alert-js__cancel">${cancel}</button>` : `` }
+            ${ _confirm ? `<button class="alert-js__confirm">${_confirm}</button>` : ``}
+            ${ _cancel ? `<button class="alert-js__cancel">${_cancel}</button>` : `` }
           </div>
         ` : `` }
       </div>
@@ -58,7 +66,7 @@ function getHtmlMarkupString( props : HtmlMarkupStringProps): string {
   `;
 }
 
-function getAlertMarkup( props: HtmlMarkupStringProps ) {
+function getAlertMarkup( props: Options ) {
   return createAlertElement('div', getHtmlMarkupString( props )).querySelector('.alert-js__alert') as Element;
 }
 
