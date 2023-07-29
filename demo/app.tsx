@@ -1,7 +1,7 @@
 import './app.css'
 // @ts-ignore
 import Alert from "../src/alert.tsx";
-import {Options} from "../src/types.ts";
+import { Options, Position} from "../src/types.ts";
 const alert = new Alert();
 
 
@@ -18,18 +18,17 @@ const positionConfig: Options = {
 }
 
 export function App() {
-  
+
   function onAlert() {
-    
+
     alert.open( {
       type: "exclamatory",
       title: "Hello world",
       content: "This is our content",
-      position: 'center-start',
       confirm: {}
     } );
   }
-  
+
   function onSuccess() {
     alert.open( {
       type: "success",
@@ -37,10 +36,10 @@ export function App() {
       content: "This is our success content",
       confirm
     } );
-    
+
   }
-  
-  const positions = [
+
+  const positions: Array<Position[]> = [
     [
       'top-start',
       'top',
@@ -58,8 +57,6 @@ export function App() {
     ]
   ];
   
-  console.log( positions )
-  
   return (
       <div className="demo">
         <h1>AlertJS</h1>
@@ -68,28 +65,31 @@ export function App() {
           <br/>
           <br/>
           <button onClick={ onSuccess }>Show Success</button>
-          
-          
+
+
           <h3>Positions</h3>
           <table>
             <tbody>
             {
               positions.map( position => (
-                <tr>
-                  {
-                    position.map( _position => (
-                        <td>
-                          <button onClick={ alert.open.bind( null, { ...positionConfig, position: _position }) } children={ _position } />
-                        </td>
-                    ) )
-                  }
-                </tr>
+                  <tr>
+                    {
+                      position.map( ( _position ) => (
+                          <td>
+                            <button
+                              onClick={ alert.open.bind( null, { ...positionConfig, position: _position }) }
+                              children={ _position }
+                            />
+                          </td>
+                      ) )
+                    }
+                  </tr>
               ) )
             }
             </tbody>
-          
+
           </table>
-        
+
         </div>
       </div>
   )

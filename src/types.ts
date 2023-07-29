@@ -28,4 +28,4 @@ interface Options{
 }
 
 
-export type { AlertType, ElementProps, AlertElementProps, ContainerNode, Options  }
+export type { AlertType, ElementProps, AlertElementProps, ContainerNode, Options, Position  }
