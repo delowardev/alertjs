@@ -70,4 +70,53 @@
 			height: 100%;
 		}
 	}
+	
+	
+	// top
+	&__position-top {
+		align-items: flex-start;
+		justify-content: center;
+	}
+	
+	&__position-top-start {
+		align-items: flex-start;
+		justify-content: flex-start;
+	}
+	
+	&__position-top-end {
+		align-items: flex-start;
+		justify-content: flex-end;
+	}
+	
+	// center
+	&__position-center {
+		align-items: center;
+		justify-content: center;
+	}
+	
+	&__position-center-start {
+		align-items: center;
+		justify-content: flex-start;
+	}
+	
+	&__position-center-end {
+		align-items: center;
+		justify-content: flex-end;
+	}
+	
+	// bottom
+	&__position-bottom {
+		align-items: flex-end;
+		justify-content: center;
+	}
+	
+	&__position-bottom-start {
+		align-items: flex-end;
+		justify-content: flex-start;
+	}
+	
+	&__position-bottom-end {
+		align-items: flex-end;
+		justify-content: flex-end;
+	}
 }
