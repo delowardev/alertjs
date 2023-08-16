@@ -13,6 +13,12 @@ const options: Options = {
   cancel: {
     text: 'Cancel',
     on: noop
+  },
+  slots: {
+    header: '',
+    body: '',
+    beforeBody: '',
+    footer: ''
   }
 }
 

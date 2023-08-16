@@ -34,33 +34,31 @@ function getContainerNodes( customContainer?: ContainerNode, options?: Options )
 
 function getHtmlMarkupString( props : Options): string {
   
-  const {
-    title,
-    content,
-    confirm,
-    cancel,
-    type,
-    // position
-  } = props;
-  
+  const { title, content, confirm, cancel, type} = props;
   const icon = icons[type];
   const _confirm = confirm?.text;
   const _cancel = cancel?.text;
-  // const _position = `alert-js__${position}`;
+  const hasFooter = _confirm || _cancel;
   
   return `
     <div class="alert-js__alert" id="alert-${Date.now()}">
       <span class="alert-js__overlay"></span>
       <div class="alert-js__container">
-        ${icon ? `<div class="alert-js__icon">${icon}</div>` : ``}
-        ${title ? `<h2 class="alert-js__title">${title}</h2>` : `` }
-        ${content ? `<p class="alert-js__content">${content}</p>` : ``}
-        ${ (_confirm || _cancel ) ? `
+        ${ props.slots?.header ? `<div class="alert-js__custom-header">${props.slots?.header}</div>` : `` }
+        <div class="alert-js__body">
+          ${ props.slots?.beforeBody ? props.slots?.beforeBody : `` }
+          ${ icon ? `<div class="alert-js__icon">${icon}</div>` : `` }
+          ${ title ? `<h2 class="alert-js__title">${title}</h2>` : `` }
+          ${ content ? `<p class="alert-js__content">${content}</p>` : `` }
+          ${ props.slots?.body ? props.slots?.body : `` }
+        </div>
+        ${ ( hasFooter ) ? `
           <div class="alert-js__footer">
             ${ _confirm ? `<button class="alert-js__confirm">${_confirm}</button>` : ``}
             ${ _cancel ? `<button class="alert-js__cancel">${_cancel}</button>` : `` }
           </div>
         ` : `` }
+        ${ props.slots?.footer ? `<div class="alert-js__custom-footer">${props.slots?.footer}</div>` : `` }
       </div>
     </div>
   `;
